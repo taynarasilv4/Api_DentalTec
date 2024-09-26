@@ -59,29 +59,29 @@ namespace Api_DentalTec.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] ConsultaDTO item)
         {
-            var novaConsulta = new Consulta
-            {
-                Id = listaConsultas.Count + 1,
-                NomePaciente = item.NomePaciente,
-                DataNascimento = item.DataNascimento,
-                Sexo = item.Sexo,
-                Endereco = item.Endereco,
-                Telefone = item.Telefone,
-                DataConsulta = item.DataConsulta,
-                HoraConsulta = item.HoraConsulta,
-                NomeMedico = item.NomeMedico,
-                Especialidade = item.Especialidade,
-                MotivoConsulta = item.MotivoConsulta,
-                HistoricoSaude = item.HistoricoSaude,
-                Sintomas = item.Sintomas,
-                ExameFisico = item.ExameFisico,
-                Diagnostico = item.Diagnostico,
-                TratamentoOrientacoes = item.TratamentoOrientacoes,
-                Observacoes = item.Observacoes
-            };
+            var contador = listaConsultas.Count();
 
-            listaConsultas.Add(novaConsulta);
-            return StatusCode(StatusCodes.Status201Created, novaConsulta);
+            var consulta = new Consulta();
+
+            consulta.NomePaciente = item.NomePaciente;
+            consulta.DataNascimento = item.DataNascimento;
+            consulta.Sexo = item.Sexo;
+            consulta.Endereco = item.Endereco;
+            consulta.Telefone = item.Telefone;
+            consulta.DataConsulta = item.DataConsulta;
+            consulta.HoraConsulta = item.HoraConsulta;
+            consulta.NomeMedico = item.NomeMedico;
+            consulta.MotivoConsulta = item.Especialidade;
+            consulta.HistoricoSaude = item.MotivoConsulta;
+            consulta.HistoricoSaude = item.HistoricoSaude;
+            consulta.Sintomas = item.Sintomas;
+            consulta.ExameFisico = item.ExameFisico;
+            consulta.Diagnostico = item.Diagnostico;
+            consulta.TratamentoOrientacoes = item.TratamentoOrientacoes;
+            consulta.Observacoes = item.Observacoes;
+
+            listaConsultas.Add(consulta);
+            return StatusCode(StatusCodes.Status201Created, consulta);
         }
 
         [HttpPut("{id}")]
