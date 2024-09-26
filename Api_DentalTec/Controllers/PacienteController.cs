@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api_DentalTec.Controllers
 {
 
-    [Route("paciente")]
+    [Route("pacientes")]
     [ApiController]
     public class PacienteController : ControllerBase
     {

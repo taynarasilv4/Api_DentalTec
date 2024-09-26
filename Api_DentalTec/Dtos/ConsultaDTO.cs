@@ -5,8 +5,6 @@ namespace Api_DentalTec.Dtos
     public class ConsultaDTO
     {
         [Required]
-        public int Id { get; set; }
-        [Required]
         public string NomePaciente { get; set; }
 
         [Required]

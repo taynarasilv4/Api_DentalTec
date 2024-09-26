@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api_DentalTec.Controllers
 {
 
-    [Route("agenda")]
+    [Route("agendas")]
     [ApiController]
 
     public class AgendaController : ControllerBase

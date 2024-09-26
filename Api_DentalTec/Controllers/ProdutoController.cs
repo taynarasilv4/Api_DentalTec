@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api_DentalTec.Controllers
 {
+    [Route("produtos")]
+    [ApiController]
     public class ProdutoController : ControllerBase
     {
             List<Produto> listaProduto = new List<Produto>();
@@ -11,11 +13,11 @@ namespace Api_DentalTec.Controllers
             {
                 var produto1 = new Produto();
                 {
+                    produto1.Id = 1;
                     produto1.Nomeproduto = "Anestésico tópico";
                     produto1.CodigoBarra = 00004000049999020;
                     produto1.DataFabricacao = new DateTime(2024, 09, 16);
                     produto1.DataValidade = new DateTime(2026, 09, 16);
-                    produto1.Id = 1;
                     produto1.Valor = 150;
 
                 }
@@ -49,12 +51,11 @@ namespace Api_DentalTec.Controllers
 
                 var produto = new Produto();
 
-
+                produto.Id = contador + 1;
                 produto.Nomeproduto = item.Nomeproduto;
                 produto.CodigoBarra = item.CodigoBarra;
                 produto.DataFabricacao = item.DataFabricacao;
                 produto.DataValidade = item.DataValidade;
-                produto.Id = contador + 1;
                 produto.Valor = item.Valor;
 
 
@@ -77,7 +78,6 @@ namespace Api_DentalTec.Controllers
                 produto.CodigoBarra = item.CodigoBarra;
                 produto.DataFabricacao = item.DataFabricacao;
                 produto.DataValidade = item.DataValidade;
-                produto.Id = item.Id;
                 produto.Valor = item.Valor;
 
                 return Ok(produto);

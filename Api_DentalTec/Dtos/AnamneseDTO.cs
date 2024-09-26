@@ -5,8 +5,6 @@ namespace Api_DentalTec.Dtos
     public class AnamneseDTO
     {
         [Required]
-        public int Id { get; set; }
-        [Required]
         public bool Febre { get; set; }
         [Required]
         public bool Tratamento { get; set; }

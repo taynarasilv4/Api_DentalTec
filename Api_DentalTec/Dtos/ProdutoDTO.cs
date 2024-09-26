@@ -13,8 +13,6 @@ namespace Api_DentalTec.Dtos
         [Required]
         public DateTime DataValidade { get; set; }
         [Required]
-        public int Id { get; set; }
-        [Required]
         public double Valor { get; set; }
 
     }

@@ -4,8 +4,7 @@ namespace Api_DentalTec.Dtos
 {
     public class DespesaDTO
     {
-        [Required]
-        public int Id { get; set; }
+        
         [Required]
         public string Funcionario { get; set; }
         [Required]
