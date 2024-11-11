@@ -1,4 +1,6 @@
 ﻿using Api_DentalTec.Database;
+using Api_DentalTec.Models;
+using MySql.Data.MySqlClient;
 
 namespace Api_DentalTec.Models
 {
@@ -64,7 +66,7 @@ namespace Api_DentalTec.Models
                         Funcionario = reader.GetString("funcionario_des"),
                         Caixa = reader.GetString("caixa_des"),
                         Data = reader.GetDateTime("data_des"),
-                        Valor = reader.GetString("valor_des"),
+                        Valor = reader.GetDouble("valor_des"),
                         Descricao = reader.GetString("descricao_des")
                     });
                 }
@@ -106,7 +108,7 @@ namespace Api_DentalTec.Models
                     _despesa.Funcionario = reader.GetString("funcionario_des");
                     _despesa.Caixa = reader.GetString("caixa_des");
                     _despesa.Data = reader.GetDateTime("data_des");
-                    _despesa.Valor = reader.GetString("valor_des");
+                    _despesa.Valor = reader.GetDouble("valor_des");
                     _despesa.Descricao = reader.GetString("descricao_des");
 
                 }
@@ -131,10 +133,10 @@ namespace Api_DentalTec.Models
                 query.CommandText = "UPDATE despesas SET descricao_des = @_descricao, valor_des = @_valor,  data_des = @_data,  caixa_des = @_caixa,  funcionario_des = @_funcionario WHERE id_des = @_id";
 
                 query.Parameters.AddWithValue("@_descricao", item.Descricao);
-                query.Parameters.AddWithValue("@_feito", item.Valor);
-                query.Parameters.AddWithValue("@_feito", item.Data);
-                query.Parameters.AddWithValue("@_feito", item.Caixa);
-                query.Parameters.AddWithValue("@_feito", item.Funcionario);
+                query.Parameters.AddWithValue("@_valor", item.Valor);
+                query.Parameters.AddWithValue("@_data", item.Data);
+                query.Parameters.AddWithValue("@_caixa", item.Caixa);
+                query.Parameters.AddWithValue("@_funcionario", item.Funcionario);
                 query.Parameters.AddWithValue("@_id", item.Id);
 
                 var result = query.ExecuteNonQuery();
