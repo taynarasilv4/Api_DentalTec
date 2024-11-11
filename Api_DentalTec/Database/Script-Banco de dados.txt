@@ -1,0 +1,14 @@
+CREATE DATABASE despesa_bd;
+USE despesa_bd;
+
+CREATE TABLE Despesa (
+  id_des integer not null primary key auto_increment,
+  funcionario_des varchar(100),
+  caixa_des varchar(100),
+  data_des datetime,
+  valor_des double,
+  descricao_des varchar(100)
+);
+
+insert into Despesa values (null, 'Taynara Silva', 'Dr Arnaldo','2022-02-20', 450, 'Limpeza básica para manutenção da saúde bucal');
+
