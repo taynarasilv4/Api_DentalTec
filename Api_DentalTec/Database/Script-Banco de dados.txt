@@ -1,14 +1,96 @@
-CREATE DATABASE despesa_bd;
-USE despesa_bd;
+create database dentalTec_bd;
+use dentalTec_bd;
 
-CREATE TABLE Despesa (
-  id_des integer not null primary key auto_increment,
-  funcionario_des varchar(100),
-  caixa_des varchar(100),
-  data_des datetime,
-  valor_des double,
-  descricao_des varchar(100)
+create table Despesa (
+id_des integer not null primary key auto_increment,
+funcionario_des varchar(200),
+caixa_des varchar(200),
+data_des datetime,
+valor_des double,
+descricao_des varchar(100)
 );
 
 insert into Despesa values (null, 'Taynara Silva', 'Dr Arnaldo','2022-02-20', 450, 'Limpeza básica para manutenção da saúde bucal');
+
+
+create table Funcionario(
+id_func integer not null primary key auto_increment,
+nome_func varchar(200) not null,
+usuario_func varchar(200),
+senha_func varchar(200),
+cpf_func varchar(20),
+status_func varchar(100),
+cargo_func varchar(50),
+salario_func double,
+rg_func varchar(20),
+expedidor_func varchar(200),
+datanasc_func date,
+ctps_func varchar(200),
+estadocivil_func varchar(200),
+sexo_func varchar(30),
+dataemissao_func varchar(200),
+email_func varchar(200),
+telefone_func varchar(200),
+cnh_func varchar(200),
+cep_func varchar(200),
+cidade_func varchar(200),
+rua_func varchar(200),
+numero_func varchar(200),
+bairro_func varchar(200)
+);
+
+insert into funcionario values (null, 'João Silva', 'jsilva', 'senha123', '123.456.789-00', 'Ativo', 'Gerente', 5000.00, '12.345.678-9', 'RO', '1985-05-12', '123456', 'solteiro', 'masculino', '2000-01-01', 'joao.silva@email.com', '(69) 91234-5678', '1234567890', '01001-000', 'ji-paraná', 'rua a', '100', 'centro');
+
+create table Servico(
+id_serv integer not null primary key auto_increment,
+servico_serv varchar(200) not null,
+profissionalEspecializado_serv varchar(200),
+descricao_serv varchar(500)
+);
+
+insert into Servico values (null, 'Limpeza Dental', 'Dentista', 'Limpeza básica para manutenção da saúde bucal');
+
+create table Anamnese(
+id_ana integer primary key auto_increment,
+febre_ana boolean,
+tratamento_ana boolean,
+cicatrizacao_ana boolean,
+anestesia_ana boolean,
+drogas_ana boolean,
+diabetes_ana boolean,
+doencas_familiares_ana boolean,
+doencas_familiares_texto_ana varchar(200),
+alergia_ana boolean,
+alergia_texto_ana varchar(200),
+doencas_art_reu_ana boolean,
+hipertensao_ana boolean,
+dst_ana boolean,
+doenca_cardiaca_ana boolean,
+gravidez_ana boolean,
+observacoes_ana varchar (200)
+);
+
+insert into anamnese values(null, false, true, false, false, true, true, false, null, true, 'manga', true, false, false, true, false, null);
+
+create table Orcamento(
+id_orc integer primary key auto_increment,
+nome_orc varchar (200),
+data_Nasc_orc date,
+cpf_orc varchar (200),
+rua_orc varchar (200),
+numero_orc integer,
+bairro_orc varchar (200),
+cidade_orc varchar (200),
+email_orc varchar (200),
+contato_orc varchar (200),
+profissional_orc varchar (200),
+data_orc date,
+servico_orc varchar (200),
+regiao_orc varchar (200),
+valor_unit_orc float
+);
+
+insert into orcamento values(null, 'Renato', '2006-02-02', '026.662.922-90', 'rua das flores', 12, 'centro', 'Ji-Paraná', 'renatocosta10@gmail.com', '(69) 99606-8551',
+ 'DR Nathan Pereira rodrigues', '2024-12-12', 'endodontia', 'boca', 1000);
+
 
