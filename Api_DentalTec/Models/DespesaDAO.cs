@@ -19,12 +19,12 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "INSERT INTO despesas (funcionario_des, caixa_des, data_des, valor_des, descricao_des) VALUES (@funcionario, @caixa, @data, @valor, @descricao)";
+                query.CommandText = "INSERT INTO despesas (funcionario_des, caixa_des, data_des, valor_des, descricao_des)" + "VALUES (@funcionario, @caixa, @data, @valor, @descricao)";
 
-                query.Parameters.AddWithValue("@funcionario", item.Descricao);
-                query.Parameters.AddWithValue("@caixa", item.Descricao);
-                query.Parameters.AddWithValue("@data", item.Data.ToString("yyyy-MM-dd HH:mm:ss"));
-                query.Parameters.AddWithValue("@valor", item.Descricao);
+                query.Parameters.AddWithValue("@funcionario", item.Funcionario);
+                query.Parameters.AddWithValue("@caixa", item.Caixa);
+                query.Parameters.AddWithValue("@data", item.Data.ToString("yyyy-MM-dd"));
+                query.Parameters.AddWithValue("@valor", item.Valor);
                 query.Parameters.AddWithValue("@descricao", item.Descricao);
 
 
@@ -83,7 +83,7 @@ namespace Api_DentalTec.Models
             }
         }
 
-        public Despesa GetById(int id)
+        public Despesa? GetById(int id)
         {
             try
             {

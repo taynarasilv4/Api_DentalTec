@@ -18,6 +18,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
+
                 query.CommandText = "INSERT INTO orcamentos (nome_orc, data_Nasc_orc, cpf_orc, rua_orc, numero_orc, bairro_orc, " +
                     "cidade_orc, email_orc, contato_orc, profissional_orc, data_orc, servico_orc, regiao_orc, valor_unit_orc) " +
                     "VALUES (@nome, @data_Nascimento, @cpf, @rua, @numero, @bairro, @cidade, @email, @contato, @profissional," +
