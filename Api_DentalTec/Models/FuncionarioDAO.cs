@@ -13,7 +13,6 @@ namespace API___Funcionario__DentalTec_.Models
             conn = new ConnectionMysql();
         }
 
-        //inserir um novo funcionário
         public int Insert(Funcionario item)
         {
             try
@@ -64,7 +63,6 @@ namespace API___Funcionario__DentalTec_.Models
             }
         }
 
-        //listar todos os funcionários
         public List<Funcionario> List()
         {
             try
@@ -118,7 +116,6 @@ namespace API___Funcionario__DentalTec_.Models
             }
         }
 
-        //buscar funcionário pelo id
         public Funcionario? GetById(int id)
         {
             try
@@ -176,7 +173,6 @@ namespace API___Funcionario__DentalTec_.Models
             }
         }
 
-        //atualizar um funcionário existente
         public void Update(Funcionario item)
         {
             try
@@ -225,7 +221,6 @@ namespace API___Funcionario__DentalTec_.Models
             }
         }
 
-        //excluir funcionário pelo id
         public void Delete(int id)
         {
             try

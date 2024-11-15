@@ -88,7 +88,6 @@ namespace Api_DentalTec.Models
             try
             {
                 Despesa _despesa = new Despesa();
-                // Tarefa _tarefa = new();
 
                 var query = conn.Query();
                 query.CommandText = "SELECT * FROM despesas WHERE id_des = @_id";

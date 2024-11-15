@@ -108,7 +108,6 @@ namespace Api_DentalTec.Models
             try
             {
                 Orcamento _orcamento = new Orcamento();
-                // Tarefa _tarefa = new();
 
                 var query = conn.Query();
                 query.CommandText = "SELECT * FROM orcamentos WHERE id_orc = @_id";

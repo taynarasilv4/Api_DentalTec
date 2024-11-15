@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using MySql.Data.MySqlClient;
+using System.Data;
 
 
 namespace Api_DentalTec.Database
@@ -15,7 +16,7 @@ namespace Api_DentalTec.Database
 
         private static readonly string password = "taynara134";
 
-        private static readonly string dbname = "despesa_bd";
+        private static readonly string dbname = "dentalTec_bd";
 
         private static MySqlConnection connection;
 
