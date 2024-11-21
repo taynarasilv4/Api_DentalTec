@@ -5,7 +5,7 @@ namespace Api_DentalTec.Dtos
     public class ServicoDTO
     {
         [Required]
-        public string Servicoo { get; set; }
+        public string NomeServico { get; set; }
         [Required]
         public string ProfissionalEspecializado { get; set; }
         [Required]

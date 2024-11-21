@@ -16,6 +16,6 @@
         public DateTime Data { get; set; }
         public string Servico { get; set; }
         public string Regiao { get; set; }
-        public string Valor_Unit { get; set; }
+        public double Valor_Unit { get; set; }
     }
 }

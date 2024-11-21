@@ -1,5 +1,4 @@
 ﻿using Api_DentalTec.Database;
-using Api_DentalTec.Models;
 using MySql.Data.MySqlClient;
 
 namespace Api_DentalTec.Models

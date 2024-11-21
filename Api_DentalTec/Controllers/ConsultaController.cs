@@ -7,123 +7,142 @@ namespace Api_DentalTec.Controllers
 {
     [Route("consultas")]
     [ApiController]
-
     public class ConsultaController : ControllerBase
     {
-        private List<Consulta> listaConsultas = new List<Consulta>();
-
-        public ConsultaController()
-        {
-            // Exemplo de consulta
-            var consulta1 = new Consulta()
-            {
-                Id = 1,
-                NomePaciente = "João da Silva",
-                DataNascimento = new DateTime(1985, 5, 15),
-                Sexo = "Masculino",
-                Endereco = "Rua das Flores, 123",
-                Telefone = "(11) 98765-4321",
-                DataConsulta = new DateTime(2024, 9, 19),
-                HoraConsulta = new TimeSpan(14, 0, 0),
-                NomeMedico = "Dr. Carlos Oliveira",
-                Especialidade = "Clínica Geral",
-                MotivoConsulta = "Dor no peito",
-                HistoricoSaude = "Sem doenças pré-existentes",
-                Sintomas = "Dor no peito e falta de ar",
-                ExameFisico = "Pressão arterial normal",
-                Diagnostico = "Avaliação cardíaca necessária",
-                TratamentoOrientacoes = "Solicitar exames e repouso",
-                Observacoes = "Paciente ansioso"
-            };
-
-            listaConsultas.Add(consulta1);
-        }
-
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(listaConsultas);
+            try
+            {
+                var listaConsultas = new ConsultaDAO().List();
+
+                if (listaConsultas == null || listaConsultas.Count == 0)
+                {
+                    return NotFound("Nenhuma consulta encontrada.");
+                }
+
+                return Ok(listaConsultas);
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Erro ao obter consultas: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var consulta = listaConsultas.FirstOrDefault(item => item.Id == id);
-            if (consulta == null)
+            try
             {
-                return NotFound();
+                var consulta = new ConsultaDAO().GetById(id);
+
+                if (consulta == null)
+                {
+                    return NotFound($"Consulta com ID {id} não encontrada.");
+                }
+
+                return Ok(consulta);
             }
-            return Ok(consulta);
+            catch (Exception ex)
+            {
+                return Problem($"Erro ao obter a consulta: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] ConsultaDTO item)
         {
-            var contador = listaConsultas.Count();
+            try
+            {
+                var consulta = new Consulta
+                {
+                    NomePaciente = item.NomePaciente,
+                    DataNascimento = item.DataNascimento,
+                    Sexo = item.Sexo,
+                    Endereco = item.Endereco,
+                    Telefone = item.Telefone,
+                    DataConsulta = item.DataConsulta,
+                    HoraConsulta = item.HoraConsulta,
+                    NomeMedico = item.NomeMedico,
+                    Especialidade = item.Especialidade,
+                    MotivoConsulta = item.MotivoConsulta,
+                    HistoricoSaude = item.HistoricoSaude,
+                    Sintomas = item.Sintomas,
+                    ExameFisico = item.ExameFisico,
+                    Diagnostico = item.Diagnostico,
+                    TratamentoOrientacoes = item.TratamentoOrientacoes,
+                    Observacoes = item.Observacoes
+                };
 
-            var consulta = new Consulta();
+                consulta.Id = new ConsultaDAO().Insert(consulta);
 
-            consulta.NomePaciente = item.NomePaciente;
-            consulta.DataNascimento = item.DataNascimento;
-            consulta.Sexo = item.Sexo;
-            consulta.Endereco = item.Endereco;
-            consulta.Telefone = item.Telefone;
-            consulta.DataConsulta = item.DataConsulta;
-            consulta.HoraConsulta = item.HoraConsulta;
-            consulta.NomeMedico = item.NomeMedico;
-            consulta.MotivoConsulta = item.Especialidade;
-            consulta.HistoricoSaude = item.MotivoConsulta;
-            consulta.HistoricoSaude = item.HistoricoSaude;
-            consulta.Sintomas = item.Sintomas;
-            consulta.ExameFisico = item.ExameFisico;
-            consulta.Diagnostico = item.Diagnostico;
-            consulta.TratamentoOrientacoes = item.TratamentoOrientacoes;
-            consulta.Observacoes = item.Observacoes;
-
-            listaConsultas.Add(consulta);
-            return StatusCode(StatusCodes.Status201Created, consulta);
+                return CreatedAtAction(nameof(GetById), new { id = consulta.Id }, consulta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao criar consulta: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] ConsultaDTO item)
         {
-            var consulta = listaConsultas.FirstOrDefault(c => c.Id == id);
-            if (consulta == null)
+            try
             {
-                return NotFound();
+                var consulta = new ConsultaDAO().GetById(id);
+
+                if (consulta == null)
+                {
+                    return NotFound($"Consulta com ID {id} não encontrada.");
+                }
+
+                consulta.NomePaciente = item.NomePaciente;
+                consulta.DataNascimento = item.DataNascimento;
+                consulta.Sexo = item.Sexo;
+                consulta.Endereco = item.Endereco;
+                consulta.Telefone = item.Telefone;
+                consulta.DataConsulta = item.DataConsulta;
+                consulta.HoraConsulta = item.HoraConsulta;
+                consulta.NomeMedico = item.NomeMedico;
+                consulta.Especialidade = item.Especialidade;
+                consulta.MotivoConsulta = item.MotivoConsulta;
+                consulta.HistoricoSaude = item.HistoricoSaude;
+                consulta.Sintomas = item.Sintomas;
+                consulta.ExameFisico = item.ExameFisico;
+                consulta.Diagnostico = item.Diagnostico;
+                consulta.TratamentoOrientacoes = item.TratamentoOrientacoes;
+                consulta.Observacoes = item.Observacoes;
+
+                new ConsultaDAO().Update(consulta);
+
+                return Ok(consulta);
             }
-
-            consulta.NomePaciente = item.NomePaciente;
-            consulta.DataNascimento = item.DataNascimento;
-            consulta.Sexo = item.Sexo;
-            consulta.Endereco = item.Endereco;
-            consulta.Telefone = item.Telefone;
-            consulta.DataConsulta = item.DataConsulta;
-            consulta.HoraConsulta = item.HoraConsulta;
-            consulta.NomeMedico = item.NomeMedico;
-            consulta.Especialidade = item.Especialidade;
-            consulta.MotivoConsulta = item.MotivoConsulta;
-            consulta.HistoricoSaude = item.HistoricoSaude;
-            consulta.Sintomas = item.Sintomas;
-            consulta.ExameFisico = item.ExameFisico;
-            consulta.Diagnostico = item.Diagnostico;
-            consulta.TratamentoOrientacoes = item.TratamentoOrientacoes;
-            consulta.Observacoes = item.Observacoes;
-
-            return Ok(consulta);
+            catch (Exception ex)
+            {
+                return Problem($"Erro ao atualizar consulta: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var consulta = listaConsultas.FirstOrDefault(c => c.Id == id);
-            if (consulta == null)
+            try
             {
-                return NotFound();
-            }
+                var consulta = new ConsultaDAO().GetById(id);
 
-            listaConsultas.Remove(consulta);
-            return Ok(consulta);
+                if (consulta == null)
+                {
+                    return NotFound($"Consulta com ID {id} não encontrada.");
+                }
+
+                new ConsultaDAO().Delete(id);
+
+                return Ok($"Consulta com ID {id} excluída com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Erro ao excluir consulta: {ex.Message}");
+            }
         }
     }
 }

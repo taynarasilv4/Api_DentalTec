@@ -8,7 +8,7 @@ namespace Api_DentalTec.Controllers
     [Route("agendas")]
     [ApiController]
 
-    public class AgendaController : ControllerBase
+    public class AgendaController : Controller
     {
         List<Agenda> listaAgenda = new List<Agenda>();
 
@@ -64,7 +64,7 @@ namespace Api_DentalTec.Controllers
             return StatusCode(StatusCodes.Status201Created, agenda);
         }
 
-        [HttpPut("{id}")] //atualizar um registro
+        [HttpPut("{id}")] 
         public IActionResult Put(int id, [FromBody] AgendaDTO item)
         {
             var agenda = listaAgenda.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca*/

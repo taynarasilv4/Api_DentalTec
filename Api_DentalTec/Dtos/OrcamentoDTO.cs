@@ -32,7 +32,7 @@ namespace Api_DentalTec.Dtos
         [Required]
         public string Regiao { get; set; }
         [Required]
-        public string Valor_Unit { get; set; }
+        public double Valor_Unit { get; set; }
 
     }
 }

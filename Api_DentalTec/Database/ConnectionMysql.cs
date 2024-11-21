@@ -16,7 +16,7 @@ namespace Api_DentalTec.Database
 
         private static readonly string password = "taynara134";
 
-        private static readonly string dbname = "dentalTec_bd";
+        private static readonly string dbname = "dentaltec_bd";
 
         private static MySqlConnection connection;
 

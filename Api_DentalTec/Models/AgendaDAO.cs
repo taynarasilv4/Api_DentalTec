@@ -1,10 +1,7 @@
 ﻿using Api_DentalTec.Database;
-using Api_DentalTec.Dtos;
-using Api_DentalTec.Models;
-using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 
-namespace PacienteEAgendaAPI.Models
+namespace Api_DentalTec.Models
 {
     public class AgendaDAO
     {

@@ -19,7 +19,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "INSERT INTO produtos (nomeproduto_pro, codigoBarra_pro, dataFabricacao_pro, dataValidade_pro, valor_pro)" + "VALUES (@nomeproduto, @codigoBarra, @dataFabricacao, @dataValidade, @valor_pro)";
+                query.CommandText = "INSERT INTO produto (nomeproduto_pro, codigoBarra_pro, dataFabricacao_pro, dataValidade_pro, valor_pro)" + "VALUES (@nomeproduto, @codigoBarra, @dataFabricacao, @dataValidade, @valor_pro)";
 
                 query.Parameters.AddWithValue("@nomeproduto", item.Nomeproduto);
                 query.Parameters.AddWithValue("@codigoBarra", item.CodigoBarra);
@@ -53,7 +53,7 @@ namespace Api_DentalTec.Models
                 List<Produto> list = new List<Produto>();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM produtos";
+                query.CommandText = "SELECT * FROM produto";
 
                 MySqlDataReader reader = query.ExecuteReader();
 
@@ -89,7 +89,7 @@ namespace Api_DentalTec.Models
                 Produto _produto = new Produto();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM produtos WHERE id_pro = @_id";
+                query.CommandText = "SELECT * FROM produto WHERE id_pro = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 
@@ -128,7 +128,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "UPDATE produtos SET valor_pro = @_valor, dataValidade_pro = @_dataValidade,  dataFabricacao_pro = @_dataFabricacao, codigoBarra_pro = @_codigoBarra,  nomeproduto_pro = @_nomeproduto WHERE id_pro = @_id";
+                query.CommandText = "UPDATE produto SET valor_pro = @_valor, dataValidade_pro = @_dataValidade,  dataFabricacao_pro = @_dataFabricacao, codigoBarra_pro = @_codigoBarra,  nomeproduto_pro = @_nomeproduto WHERE id_pro = @_id";
 
                 query.Parameters.AddWithValue("@_valor", item.Valor);
                 query.Parameters.AddWithValue("@_dataValidade", item.DataValidade);
@@ -159,7 +159,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "DELETE FROM produtos WHERE id_des = @_id";
+                query.CommandText = "DELETE FROM produto WHERE id_des = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 

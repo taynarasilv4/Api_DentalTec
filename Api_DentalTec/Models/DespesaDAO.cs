@@ -1,15 +1,14 @@
 ﻿using Api_DentalTec.Database;
-using Api_DentalTec.Models;
 using MySql.Data.MySqlClient;
 
 namespace Api_DentalTec.Models
 {
-    public class DespesaDao
+    public class DespesaDAO
     {
 
         private static ConnectionMysql conn;
 
-        public DespesaDao()
+        public DespesaDAO()
         {
             conn = new ConnectionMysql();
         }
@@ -19,7 +18,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "INSERT INTO despesas (funcionario_des, caixa_des, data_des, valor_des, descricao_des)" + "VALUES (@funcionario, @caixa, @data, @valor, @descricao)";
+                query.CommandText = "INSERT INTO despesa (funcionario_des, caixa_des, data_des, valor_des, descricao_des)" + "VALUES (@funcionario, @caixa, @data, @valor, @descricao)";
 
                 query.Parameters.AddWithValue("@funcionario", item.Funcionario);
                 query.Parameters.AddWithValue("@caixa", item.Caixa);
@@ -37,8 +36,9 @@ namespace Api_DentalTec.Models
 
                 return (int)query.LastInsertedId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Erro: {ex.Message}");
                 throw;
             }
             finally
@@ -54,7 +54,7 @@ namespace Api_DentalTec.Models
                 List<Despesa> list = new List<Despesa>();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM despesas";
+                query.CommandText = "SELECT * FROM despesa";
 
                 MySqlDataReader reader = query.ExecuteReader();
 
@@ -90,7 +90,7 @@ namespace Api_DentalTec.Models
                 Despesa _despesa = new Despesa();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM despesas WHERE id_des = @_id";
+                query.CommandText = "SELECT * FROM despesa WHERE id_des = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 
@@ -129,7 +129,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "UPDATE despesas SET descricao_des = @_descricao, valor_des = @_valor,  data_des = @_data,  caixa_des = @_caixa,  funcionario_des = @_funcionario WHERE id_des = @_id";
+                query.CommandText = "UPDATE despesa SET descricao_des = @_descricao, valor_des = @_valor,  data_des = @_data,  caixa_des = @_caixa,  funcionario_des = @_funcionario WHERE id_des = @_id";
 
                 query.Parameters.AddWithValue("@_descricao", item.Descricao);
                 query.Parameters.AddWithValue("@_valor", item.Valor);
@@ -160,7 +160,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "DELETE FROM despesas WHERE id_des = @_id";
+                query.CommandText = "DELETE FROM despesa WHERE id_des = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 

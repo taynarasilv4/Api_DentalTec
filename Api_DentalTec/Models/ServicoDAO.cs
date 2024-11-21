@@ -1,30 +1,28 @@
 ﻿using Api_DentalTec.Database;
-using Api_DentalTec.Models;
 using MySql.Data.MySqlClient;
 
 namespace Api_DentalTec.Models
 {
     public class ServicoDAO
     {
-        private static ConnectionMysql conn;
+        private static ConnectionMysql _conn;
 
         public ServicoDAO()
         {
-            conn = new ConnectionMysql();
+            _conn = new ConnectionMysql();
         }
 
-        //inserir um novo serviço
         public int Insert(Servico item)
         {
             try
             {
-                var query = conn.Query();
-                query.CommandText = "INSERT INTO servico (Servicoo, ProfissionalEspecializado, Descricao) " +
-                                    "VALUES (@Servicoo, @ProfissionalEspecializado, @Descricao)";
+                var query = _conn.Query();
+                query.CommandText = "INSERT INTO servico (nomeServico_serv, profissionalEspecializado_serv, descricao_serv) " +
+                                    "VALUES (@nomeServico, @profissionalEspecializado, @descricao)";
 
-                query.Parameters.AddWithValue("@Servicoo", item.Servicoo);
-                query.Parameters.AddWithValue("@ProfissionalEspecializado", item.ProfissionalEspecializado);
-                query.Parameters.AddWithValue("@Descricao", item.Descricao);
+                query.Parameters.AddWithValue("@nomeServico", item.NomeServico);
+                query.Parameters.AddWithValue("@profissionalEspecializado", item.ProfissionalEspecializado);
+                query.Parameters.AddWithValue("@descricao", item.Descricao);
 
                 var result = query.ExecuteNonQuery();
 
@@ -41,18 +39,18 @@ namespace Api_DentalTec.Models
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
 
-        //listar todos os serviços
         public List<Servico> List()
         {
             try
             {
                 List<Servico> list = new List<Servico>();
+                // List<Servico> list = [];
 
-                var query = conn.Query();
+                var query = _conn.Query();
                 query.CommandText = "SELECT * FROM servico";
 
                 MySqlDataReader reader = query.ExecuteReader();
@@ -61,10 +59,10 @@ namespace Api_DentalTec.Models
                 {
                     list.Add(new Servico()
                     {
-                        Id = reader.GetInt32("Id"),
-                        Servicoo = reader.GetString("Servicoo"),
-                        ProfissionalEspecializado = reader.GetString("ProfissionalEspecializado"),
-                        Descricao = reader.GetString("Descricao")
+                        Id = reader.GetInt32("id_serv"),
+                        NomeServico = reader.GetString("nomeServico_serv"),
+                        ProfissionalEspecializado = reader.GetString("profissionalEspecializado_serv"),
+                        Descricao = reader.GetString("descricao_serv")
                     });
                 }
 
@@ -76,19 +74,19 @@ namespace Api_DentalTec.Models
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
 
-        //buscar um serviço por id
         public Servico? GetById(int id)
         {
             try
             {
                 Servico _servico = new Servico();
+                // Servico _servico = new();
 
-                var query = conn.Query();
-                query.CommandText = "SELECT * FROM servico WHERE Id = @_id";
+                var query = _conn.Query();
+                query.CommandText = "SELECT * FROM servico WHERE id_serv = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 
@@ -101,10 +99,10 @@ namespace Api_DentalTec.Models
 
                 while (reader.Read())
                 {
-                    _servico.Id = reader.GetInt32("Id");
-                    _servico.Servicoo = reader.GetString("Servicoo");
-                    _servico.ProfissionalEspecializado = reader.GetString("ProfissionalEspecializado");
-                    _servico.Descricao = reader.GetString("Descricao");
+                    _servico.Id = reader.GetInt32("id_serv");
+                    _servico.NomeServico = reader.GetString("nomeServico_serv");
+                    _servico.ProfissionalEspecializado = reader.GetString("profissionalEspecializado_serv");
+                    _servico.Descricao = reader.GetString("descricao_serv");
                 }
 
                 return _servico;
@@ -115,21 +113,20 @@ namespace Api_DentalTec.Models
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
 
-        //atualizar um serviço existente
         public void Update(Servico item)
         {
             try
             {
-                var query = conn.Query();
-                query.CommandText = "UPDATE servico SET Servicoo = @_Servicoo, ProfissionalEspecializado = @_ProfissionalEspecializado, Descricao = @_Descricao WHERE Id = @_id";
+                var query = _conn.Query();
+                query.CommandText = "UPDATE servico SET nomeServico_serv = @_nomeServico, profissionalEspecializado_serv = @_profissionalEspecializado, descricao_serv = @_descricao WHERE id_serv = @_id";
 
-                query.Parameters.AddWithValue("@_Servicoo", item.Servicoo);
-                query.Parameters.AddWithValue("@_ProfissionalEspecializado", item.ProfissionalEspecializado);
-                query.Parameters.AddWithValue("@_Descricao", item.Descricao);
+                query.Parameters.AddWithValue("@_nomeServico", item.NomeServico);
+                query.Parameters.AddWithValue("@_profissionalEspecializado", item.ProfissionalEspecializado);
+                query.Parameters.AddWithValue("@_descricao", item.Descricao);
                 query.Parameters.AddWithValue("@_id", item.Id);
 
                 var result = query.ExecuteNonQuery();
@@ -145,17 +142,16 @@ namespace Api_DentalTec.Models
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
 
-        //excluir serviço pelo id
         public void Delete(int id)
         {
             try
             {
-                var query = conn.Query();
-                query.CommandText = "DELETE FROM servico WHERE Id = @_id";
+                var query = _conn.Query();
+                query.CommandText = "DELETE FROM servico WHERE id_serv = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 
@@ -172,7 +168,7 @@ namespace Api_DentalTec.Models
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using Api_DentalTec.Database;
-using Api_DentalTec.Models;
 using MySql.Data.MySqlClient;
 
 namespace Api_DentalTec.Models
@@ -19,7 +18,7 @@ namespace Api_DentalTec.Models
             {
                 var query = conn.Query();
 
-                query.CommandText = "INSERT INTO orcamentos (nome_orc, data_Nasc_orc, cpf_orc, rua_orc, numero_orc, bairro_orc, " +
+                query.CommandText = "INSERT INTO orcamento (nome_orc, data_Nasc_orc, cpf_orc, rua_orc, numero_orc, bairro_orc, " +
                     "cidade_orc, email_orc, contato_orc, profissional_orc, data_orc, servico_orc, regiao_orc, valor_unit_orc) " +
                     "VALUES (@nome, @data_Nascimento, @cpf, @rua, @numero, @bairro, @cidade, @email, @contato, @profissional," +
                     " @data, @servico, @regiao, @valor_Unitario)";
@@ -48,8 +47,9 @@ namespace Api_DentalTec.Models
 
                 return (int)query.LastInsertedId;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Erro: {ex.Message}");
                 throw;
             }
             finally
@@ -65,7 +65,7 @@ namespace Api_DentalTec.Models
                 List<Orcamento> list = new List<Orcamento>();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM orcamentos";
+                query.CommandText = "SELECT * FROM orcamento";
 
                 MySqlDataReader reader = query.ExecuteReader();
 
@@ -85,16 +85,17 @@ namespace Api_DentalTec.Models
                         Contato = reader.GetString("contato_orc"),
                         Profissional = reader.GetString("profissional_orc"),
                         Data = reader.GetDateTime("data_orc"),
-                        Servico = reader.GetString("sevico_orc"),
+                        Servico = reader.GetString("servico_orc"),
                         Regiao = reader.GetString("regiao_orc"),
-                        Valor_Unit = reader.GetString("valor_Unit_orc")
+                        Valor_Unit = reader.GetDouble("valor_Unit_orc")
                     });
                 }
 
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Erro: {ex.Message}");
                 throw;
             }
             finally
@@ -110,7 +111,7 @@ namespace Api_DentalTec.Models
                 Orcamento _orcamento = new Orcamento();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM orcamentos WHERE id_orc = @_id";
+                query.CommandText = "SELECT * FROM orcamento WHERE id_orc = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 
@@ -135,15 +136,16 @@ namespace Api_DentalTec.Models
                     _orcamento.Contato = reader.GetString("contato_orc");
                     _orcamento.Profissional = reader.GetString("profissional_orc");
                     _orcamento.Data = reader.GetDateTime("data_orc");
-                    _orcamento.Servico = reader.GetString("sevico_orc");
+                    _orcamento.Servico = reader.GetString("servico_orc");
                     _orcamento.Regiao = reader.GetString("regiao_orc");
-                    _orcamento.Valor_Unit = reader.GetString("valor_Unit_orc");
+                    _orcamento.Valor_Unit = reader.GetDouble("valor_Unit_orc");
                 }
 
                 return _orcamento;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Erro: {ex.Message}");
                 throw;
             }
             finally
@@ -157,7 +159,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "UPDATE orcamentos SET nome_orc = @_nome, data_Nasc_orc = @_data_Nasc, cpf_orc = @_cpf," +
+                query.CommandText = "UPDATE orcamento SET nome_orc = @_nome, data_Nasc_orc = @_data_Nasc, cpf_orc = @_cpf," +
                     "rua_orc = @_rua, numero_orc = @_numero, bairro_orc = @_bairro, cidade_orc = @_cidade, email_orc = @_email," +
                     "contato_orc = @_contato, profissional_orc = @_profissional, data_orc = @_data, servico_orc = @_servico," +
                     "regiao_orc = @_regiao, valor_Unit_orc = @_valor_Unit WHERE id_orc = @_id";
@@ -185,8 +187,9 @@ namespace Api_DentalTec.Models
                     throw new Exception("O registro não foi atualizado. Verifique e tente novamente");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Erro: {ex.Message}");
                 throw;
             }
             finally
@@ -200,7 +203,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "DELETE FROM orcamentos WHERE id_orc = @_id";
+                query.CommandText = "DELETE FROM orcamento WHERE id_orc = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 
@@ -211,8 +214,9 @@ namespace Api_DentalTec.Models
                     throw new Exception("O registro não foi excluído. Verifique e tente novamente");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Erro: {ex.Message}");
                 throw;
             }
             finally
@@ -222,6 +226,8 @@ namespace Api_DentalTec.Models
         }
     }
 }
+
+
 
 
 

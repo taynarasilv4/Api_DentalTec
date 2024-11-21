@@ -17,7 +17,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "INSERT INTO tarefas (Funcionario, TotalEntrada, TotalSaida, ValorTotal, ValorInicial, TipoPagamento) VALUES " +
+                query.CommandText = "INSERT INTO caixa (Funcionario, TotalEntrada, TotalSaida, ValorTotal, ValorInicial, TipoPagamento) VALUES " +
                     "(@Funcionario, @TotalEntrada, @TotalSaida, @ValorTotal, @ValorInicial, @TipoPagamento)";
 
                 query.Parameters.AddWithValue("@Funcionario", item.Funcionario);

@@ -1,5 +1,4 @@
 ﻿using Api_DentalTec.Database;
-using Api_DentalTec.Models;
 using MySql.Data.MySqlClient;
 
 namespace Api_DentalTec.Models
@@ -18,7 +17,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "INSERT INTO anamneses (febre_ana, tratamento_ana, cicatrizacao_ana, anestesia_ana, " +
+                query.CommandText = "INSERT INTO anamnese (febre_ana, tratamento_ana, cicatrizacao_ana, anestesia_ana, " +
                     "drogas_ana, diabetes_ana, doencas_familiares_ana, doencas_familiares_texto_ana, alergia_ana, alergia_texto_ana," +
                     "doencas_art_reu_ana, hipertensao_ana, dst_ana, doenca_cardiaca_ana, gravidez_ana, observacoes_ana) " +
                     "VALUES (@febre, @tratamento, @cicatrizacao, @anestesia, @drogas, @diabetes, @doencas_familiares, " +
@@ -68,7 +67,7 @@ namespace Api_DentalTec.Models
                 List<Anamnese> list = new List<Anamnese>();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM anamneses";
+                query.CommandText = "SELECT * FROM anamnese";
 
                 MySqlDataReader reader = query.ExecuteReader();
 
@@ -115,7 +114,7 @@ namespace Api_DentalTec.Models
                 Anamnese _anamnese = new Anamnese();
 
                 var query = conn.Query();
-                query.CommandText = "SELECT * FROM anamneses WHERE id_ana = @_id";
+                query.CommandText = "SELECT * FROM anamnese WHERE id_ana = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 
@@ -164,7 +163,8 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "UPDATE anamneses SET febre_ana = @_febre, tratamento_ana = @_tratamento, " +
+                query.CommandText = "UPDATE anamnese" +
+                    " SET febre_ana = @_febre, tratamento_ana = @_tratamento, " +
                     "cicatrizacao_ana = @_cicatrizacao, anestesia_ana = @_anestesia, drogas_ana = @_drogas, " +
                     "diabetes_ana = @_diabetes, doencas_familiares_ana = @_doencas_familiares, " +
                     "doencas_familiares_texto_ana = @_doencas_familiares_texto, alergia_ana = @_alergia, alergia_ana = @_alergia," +
@@ -212,7 +212,7 @@ namespace Api_DentalTec.Models
             try
             {
                 var query = conn.Query();
-                query.CommandText = "DELETE FROM anamneses WHERE id_ana = @_id";
+                query.CommandText = "DELETE FROM anamnese WHERE id_ana = @_id";
 
                 query.Parameters.AddWithValue("@_id", id);
 

@@ -1,5 +1,5 @@
-create database dentalTec_bd;
-use dentalTec_bd;
+create database dentaltec_bd;
+use dentaltec_bd;
 
 
     create table Funcionario (
@@ -141,7 +141,7 @@ insert into Consulta values (null, 'Maria', '2006-02-04', 'feminino', 'rua das f
     foreign key (id_pac_fk) references paciente(id_pac)
 );
 
-insert into Anamnese values (null,null, false, true, false, false, true, true, null, true, 'manga', true, false, false, true, false, null, 1);
+insert into anamnese values(null, false, true, false, false, true, true, false, 'negativo', true, 'manga', true, false, false, true, false, 'nada',1);
 
 
     create table Produto (
@@ -179,4 +179,3 @@ insert into Agenda values (null, 'Natalia', 'dentista', '2024-11-15', '09:30:00'
 );
 
 insert into Caixa values (null, 'joaquim', 200.00, 100.00, 1000.00, 0, 'dinheiro');
-

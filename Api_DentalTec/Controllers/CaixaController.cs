@@ -8,53 +8,44 @@ namespace Api_DentalTec.Controllers
     [ApiController]
     public class CaixaController : ControllerBase
     {
-        List<Caixa> listaCaixa = new List<Caixa>();
-
-        public CaixaController()
-        {
-            var caixa1 = new Caixa()
-            {
-                Id = 1,
-                Funcionario = "Natalia Pereira",
-                TotalEntrada = 200.00,
-                TotalSaida = 50.00,
-                ValorTotal = 1000.00,
-                ValorInicial = 0,
-                TipoPagamento = "Dinheiro"
-
-            };
-
-
-            listaCaixa.Add(caixa1);
-        }
-
-        [HttpGet] 
+        [HttpGet]
         public IActionResult Get()
         {
-            return Ok(listaCaixa);
+            try
+            {
+                List<Caixa> listaCaixa = new CaixaDAO().List();
+                return Ok(listaCaixa);
+            }
+            catch (Exception)
+            {
+                return Problem($"Ocorreram erros ao processar a solicitação");
+            }
         }
-
-        [HttpGet("{id}")] 
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var caixa = listaCaixa.Where(item => item.Id == id).FirstOrDefault(); 
-
-            if (caixa == null) 
+            try
             {
-                return NotFound();
+                var caixa = new CaixaDAO().GetById(id);
+
+                if (caixa == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(caixa);
+            }
+            catch (Exception)
+            {
+                return Problem("Ocorreram erros ao processar a solicitação");
             }
 
-            return Ok(caixa);
         }
-
-        [HttpPost] 
+        [HttpPost]
         public IActionResult Post([FromBody] CaixaDTO item)
         {
-
-            var contador = listaCaixa.Count();
             var caixa = new Caixa();
 
-            caixa.Id = contador + 1;
             caixa.Funcionario = item.Funcionario;
             caixa.TotalEntrada = item.TotalEntrada;
             caixa.TotalSaida = item.TotalSaida;
@@ -62,48 +53,69 @@ namespace Api_DentalTec.Controllers
             caixa.ValorInicial = item.ValorInicial;
             caixa.TipoPagamento = item.TipoPagamento;
 
-            listaCaixa.Add(caixa);
+            try
+            {
+                var dao = new CaixaDAO();
+                caixa.Id = dao.Insert(caixa);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            return StatusCode(StatusCodes.Status201Created, caixa);
+            return Created("", caixa);
         }
-
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] CaixaDTO item)
         {
-            var caixa = listaCaixa.Where(item => item.Id == id).FirstOrDefault();
-
-            if (caixa == null)
+            try
             {
-                return NotFound();
+                var caixa = new CaixaDAO().GetById(id);
+
+                if (caixa == null)
+                {
+                    return NotFound();
+                }
+
+
+                caixa.Funcionario = item.Funcionario;
+                caixa.TotalEntrada = item.TotalEntrada;
+                caixa.TotalSaida = item.TotalSaida;
+                caixa.ValorTotal = item.ValorTotal;
+                caixa.ValorInicial = item.ValorInicial;
+                caixa.TipoPagamento = item.TipoPagamento;
+
+                new CaixaDAO().Update(caixa);
+
+                return Ok(caixa);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
             }
 
-            caixa.Funcionario = item.Funcionario;
-            caixa.TotalEntrada = item.TotalEntrada;
-            caixa.TotalSaida = item.TotalSaida;
-            caixa.ValorTotal = item.ValorTotal;
-            caixa.ValorInicial = item.ValorInicial;
-            caixa.TipoPagamento = item.TipoPagamento;
-
-
-
-            return Ok(caixa);
         }
-
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var caixa = listaCaixa.Where(item => item.Id == id).FirstOrDefault();
-
-            if (caixa == null)
+            try
             {
-                return NotFound();
+                var caixa = new CaixaDAO().GetById(id);
+
+                if (caixa == null)
+                {
+                    return NotFound();
+                }
+
+                new CaixaDAO().Delete(caixa.Id);
+                return Ok(caixa);
             }
-
-            listaCaixa.Remove(caixa);
-
-
-            return Ok(caixa);
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
-
     }
 }
+
+

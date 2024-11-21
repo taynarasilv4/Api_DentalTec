@@ -37,17 +37,17 @@ namespace Api_DentalTec.Controllers
             listaPaciente.Add(paciente1);
         }
 
-        [HttpGet] //listagem
+        [HttpGet] 
         public IActionResult Get()
         {
             return Ok(listaPaciente);
         }
 
-        [HttpGet("{id}")] //listagem = busca pelo id
+        [HttpGet("{id}")] 
         public IActionResult GetById(int id)
         {
-            var paciente = listaPaciente.Where(item => item.Id == id).FirstOrDefault(); /*fazendo busca*/
-            if (paciente == null) /*verifica se existe*/
+            var paciente = listaPaciente.Where(item => item.Id == id).FirstOrDefault(); 
+            if (paciente == null) 
             {
                 return NotFound();
             }
@@ -56,11 +56,11 @@ namespace Api_DentalTec.Controllers
         }
 
 
-        [HttpPost] //criar um registro
+        [HttpPost] 
         public IActionResult Post([FromBody] PacienteDTO item)
         {
 
-            if (!Validations.ValidaCPF.ValidaCpf(item.Cpf))//se false
+            if (!Validations.ValidaCPF.ValidaCpf(item.Cpf))
             {
                 return BadRequest("CPF inválido.");
             }
@@ -91,17 +91,17 @@ namespace Api_DentalTec.Controllers
             return StatusCode(StatusCodes.Status201Created, paciente);
         }
 
-        [HttpPut("{id}")] //atualizar um registro
+        [HttpPut("{id}")] 
         public IActionResult Put(int id, [FromBody] PacienteDTO item)
         {
-            var paciente = listaPaciente.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca*/
+            var paciente = listaPaciente.Where(item => item.Id == id).FirstOrDefault();
 
-            if (paciente == null) /*verifica se existe*/
+            if (paciente == null) 
             {
                 return NotFound();
             }
 
-            if (!Validations.ValidaCPF.ValidaCpf(item.Cpf))//se false
+            if (!Validations.ValidaCPF.ValidaCpf(item.Cpf))
             {
                 return BadRequest("CPF inválido.");
             }
@@ -125,19 +125,18 @@ namespace Api_DentalTec.Controllers
             return Ok(paciente);
         }
 
-        [HttpDelete("{id}")] //excluir um registro
+        [HttpDelete("{id}")] 
         public IActionResult Delete(int id)
         {
-            var paciente = listaPaciente.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca*/
+            var paciente = listaPaciente.Where(item => item.Id == id).FirstOrDefault();
 
-            if (paciente == null) /*verifica se existe*/
+            if (paciente == null)
             {
                 return NotFound();
             }
 
             listaPaciente.Remove(paciente);
 
-            /*return NoContent(); /*status code 204 e você não retorna nenhuma informação*/
             return Ok(paciente);
         }
     }

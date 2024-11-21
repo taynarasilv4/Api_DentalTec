@@ -9,89 +9,109 @@ namespace Api_DentalTec.Controllers
     [ApiController]
     public class ServicoController : ControllerBase
     {
-        List<Servico> listaServico = new List<Servico>();
-
-        public ServicoController()
-        {
-            var servico1 = new Servico()
-            {
-                Id = 1,
-                Servicoo = "x",
-                ProfissionalEspecializado = "Sthefany Lorrany Gomes Silva",
-                Descricao = "y"
-            };
-
-            listaServico.Add(servico1);
-        }
-
-        [HttpGet] //listagem
+        [HttpGet] // Listagem de todos os serviços
         public IActionResult Get()
         {
-            return Ok(listaServico);
+            try
+            {
+                List<Servico> listaServicos = new ServicoDAO().List();
+
+                return Ok(listaServicos);
+            }
+            catch (Exception)
+            {
+                return Problem("Ocorreram erros ao processar a solicitação.");
+            }
         }
 
-        [HttpGet("{id}")] //listagem = busca pelo id
+        [HttpGet("{id}")] // Busca por ID
         public IActionResult GetById(int id)
         {
-            var servico = listaServico.Where(item => item.Id == id).FirstOrDefault(); /*fazendo busca do servico*/
-
-            if (servico == null) /*verifica se existe*/
+            try
             {
-                return NotFound();
-            }
+                var servico = new ServicoDAO().GetById(id);
 
-            return Ok(servico);
+                if (servico == null)
+                {
+                    return NotFound("Serviço não encontrado.");
+                }
+
+                return Ok(servico);
+            }
+            catch (Exception)
+            {
+                return Problem("Ocorreram erros ao processar a solicitação.");
+            }
         }
 
-        [HttpPost] //criar um registro
+        [HttpPost] // Criar um novo serviço
         public IActionResult Post([FromBody] ServicoDTO item)
         {
-            var contador = listaServico.Count();
-
             var servico = new Servico();
 
-            servico.Id = contador + 1;
-            servico.Servicoo = item.Servicoo;
+            servico.NomeServico = item.NomeServico;
             servico.ProfissionalEspecializado = item.ProfissionalEspecializado;
             servico.Descricao = item.Descricao;
 
-            listaServico.Add(servico);
+            try
+            {
+                var dao = new ServicoDAO();
+                servico.Id = dao.Insert(servico);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao criar o serviço: {ex.Message}");
+            }
 
-            return StatusCode(StatusCodes.Status201Created, servico);
+            return Created("", servico);
         }
 
-        [HttpPut("{id}")] //atualizar um registro
+        [HttpPut("{id}")] // Atualizar um serviço existente
         public IActionResult Put(int id, [FromBody] ServicoDTO item)
         {
-            var servico = listaServico.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca do servico*/
-
-            if (servico == null) /*verifica se existe*/
+            try
             {
-                return NotFound();
+                var servico = new ServicoDAO().GetById(id);
+
+                if (servico == null)
+                {
+                    return NotFound("Serviço não encontrado.");
+                }
+
+                servico.NomeServico = item.NomeServico;
+                servico.ProfissionalEspecializado = item.ProfissionalEspecializado;
+                servico.Descricao = item.Descricao;
+
+                new ServicoDAO().Update(servico);
+
+                return Ok(servico);
             }
-
-            servico.Servicoo = item.Servicoo;
-            servico.ProfissionalEspecializado = item.ProfissionalEspecializado;
-            servico.Descricao = item.Descricao;
-
-            return Ok(servico);
+            catch (Exception ex)
+            {
+                return Problem($"Erro ao atualizar o serviço: {ex.Message}");
+            }
         }
 
-        [HttpDelete("{id}")] //excluir um registro
+        [HttpDelete("{id}")] // Excluir um serviço
         public IActionResult Delete(int id)
         {
-            var servico = listaServico.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca do servico*/
-
-            if (servico == null) /*verifica se existe*/
+            try
             {
-                return NotFound();
+                var servico = new ServicoDAO().GetById(id);
+
+                if (servico == null)
+                {
+                    return NotFound("Serviço não encontrado.");
+                }
+
+                new ServicoDAO().Delete(servico.Id);
+
+                return Ok(servico); // Retorna o serviço excluído
             }
-
-            listaServico.Remove(servico);
-
-            /*return NoContent(); /*status code 204 e você não retorna nenhuma informação*/
-            return Ok(servico); /*mostra o servico que você excluiu*/
+            catch (Exception ex)
+            {
+                return Problem($"Erro ao excluir o serviço: {ex.Message}");
+            }
         }
     }
 }
-

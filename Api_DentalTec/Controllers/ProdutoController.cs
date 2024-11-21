@@ -6,95 +6,116 @@ namespace Api_DentalTec.Controllers
 {
     [Route("produtos")]
     [ApiController]
-    public class ProdutoController : ControllerBase
+    public class ProdutoController : Controller
     {
-            List<Produto> listaProduto = new List<Produto>();
-            public ProdutoController()
+        [HttpGet]
+        public IActionResult Get()
+        {
+            try
             {
-                var produto1 = new Produto();
-                {
-                    produto1.Id = 1;
-                    produto1.Nomeproduto = "Anestésico tópico";
-                    produto1.CodigoBarra = 00004000049999020;
-                    produto1.DataFabricacao = new DateTime(2024, 09, 16);
-                    produto1.DataValidade = new DateTime(2026, 09, 16);
-                    produto1.Valor = 150;
+                List<Produto> listaProduto = new ProdutoDAO().List();
 
-                }
-                listaProduto.Add(produto1);
-            }
-
-            [HttpGet] //listagem
-            public IActionResult Get()
-            {
                 return Ok(listaProduto);
             }
+            catch (Exception)
+            {
+                return Problem($"Ocorreram erros ao processar a solicitação");
+            }
+        }
 
-            [HttpGet("{id}")] //listagem = busca pelo id
+
+            [HttpGet("{id}")] 
             public IActionResult GetById(int id)
             {
-                var produto = listaProduto.Where(item => item.Id == id).FirstOrDefault(); /*fazendo busca do produto*/
-
-                if (produto == null) /*verifica se existe*/
+                try
                 {
-                    return NotFound();
-                }
+                var produto = new ProdutoDAO().GetById(id);
 
-                return Ok(produto);
+                    if (produto == null) 
+                    {
+                        return NotFound();
+                    }
+
+                    return Ok(produto);
+                }
+                catch (Exception)
+                {
+                    return Problem("Ocorreram erros ao processar a solicitação");
+                }
             }
 
-            [HttpPost] //criar um registro
+            [HttpPost] 
             public IActionResult Post([FromBody] ProdutoDTO item)
             {
-
-                var contador = listaProduto.Count();
-
                 var produto = new Produto();
 
-                produto.Id = contador + 1;
                 produto.Nomeproduto = item.Nomeproduto;
                 produto.CodigoBarra = item.CodigoBarra;
                 produto.DataFabricacao = item.DataFabricacao;
                 produto.DataValidade = item.DataValidade;
                 produto.Valor = item.Valor;
 
+                try
+                {
+                    var dao = new ProdutoDAO();
+                    produto.Id = dao.Insert(produto);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
 
-                listaProduto.Add(produto);
-
-                return StatusCode(StatusCodes.Status201Created, produto);
+                return Created("", produto);
             }
 
-            [HttpPut("{id}")] //atualizar um registro
+            [HttpPut("{id}")] 
             public IActionResult Put(int id, [FromBody] ProdutoDTO item)
             {
-                var produto = listaProduto.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca do produto*/
-
-                if (produto == null) /*verifica se existe*/
+                try
                 {
-                    return NotFound();
+                    var produto = new ProdutoDAO().GetById(id);
+                
+                    if (produto == null) 
+                    {
+                        return NotFound();
+                    }
+
+                        produto.Nomeproduto = item.Nomeproduto;
+                        produto.CodigoBarra = item.CodigoBarra;
+                        produto.DataFabricacao = item.DataFabricacao;
+                        produto.DataValidade = item.DataValidade;
+                        produto.Valor = item.Valor;
+
+                        new ProdutoDAO().Update(produto);
+
+                        return Ok(produto);
                 }
-
-                produto.Nomeproduto = item.Nomeproduto;
-                produto.CodigoBarra = item.CodigoBarra;
-                produto.DataFabricacao = item.DataFabricacao;
-                produto.DataValidade = item.DataValidade;
-                produto.Valor = item.Valor;
-
-                return Ok(produto);
+                catch (Exception e)
+                {
+                    return Problem(e.Message);
+                }
             }
 
-            [HttpDelete("{id}")] //excluir um registro
+            [HttpDelete("{id}")] 
             public IActionResult Delete(int id)
             {
-                var produto = listaProduto.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca de produto*/
-
-                if (produto == null) /*verifica se existe*/
+                try
                 {
-                    return NotFound();
-                }
+                    var produto = new ProdutoDAO().GetById(id);
 
-                listaProduto.Remove(produto);
-                return Ok(produto); /*mostra o produto que você excluiu*/
+                    if (produto == null)
+                    {
+                       return NotFound();
+                    }
+
+                    new ProdutoDAO().Delete(produto.Id);
+
+                    return Ok(produto);
+                }
+                catch (Exception e)
+                {
+                    return Problem(e.Message);
+                }
             }
 
     }
