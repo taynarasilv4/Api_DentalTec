@@ -66,6 +66,7 @@ namespace Api_DentalTec.Models
         }
 
         // Listar todas as consultas
+        // No método List()
         public List<Consulta> List()
         {
             try
@@ -88,7 +89,10 @@ namespace Api_DentalTec.Models
                         Endereco = reader.GetString("endereco_cons"),
                         Telefone = reader.GetString("telefone_cons"),
                         DataConsulta = reader.GetDateTime("dataconsulta_cons"),
-                        HoraConsulta = TimeSpan.Parse(reader.GetString("horaconsulta_cons")),
+
+                        HoraConsulta = reader.IsDBNull(reader.GetOrdinal("horaconsulta_cons"))
+                            ? TimeSpan.Zero
+                            : reader.GetTimeSpan("horaconsulta_cons"),
                         NomeMedico = reader.GetString("nomemedico_cons"),
                         Especialidade = reader.GetString("especialidade_cons"),
                         MotivoConsulta = reader.GetString("motivoconsulta_cons"),
@@ -113,7 +117,8 @@ namespace Api_DentalTec.Models
             }
         }
 
-        // Buscar consulta pelo ID
+
+
         public Consulta? GetById(int id)
         {
             try
@@ -163,7 +168,7 @@ namespace Api_DentalTec.Models
             }
         }
 
-        // Atualizar consulta
+
         public void Update(Consulta item)
         {
             try
@@ -244,4 +249,3 @@ namespace Api_DentalTec.Models
         }
     }
 }
-

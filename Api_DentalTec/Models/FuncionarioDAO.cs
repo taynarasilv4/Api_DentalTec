@@ -2,7 +2,7 @@
 using Api_DentalTec.Models;
 using MySql.Data.MySqlClient;
 
-namespace API___Funcionario__DentalTec_.Models
+namespace Api_DentalTec.Models
 {
     public class FuncionarioDAO
     {

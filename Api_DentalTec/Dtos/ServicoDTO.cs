@@ -10,5 +10,8 @@ namespace Api_DentalTec.Dtos
         public string ProfissionalEspecializado { get; set; }
         [Required]
         public string Descricao { get; set; }
+        [Required]
+        public int IdOrcamento { get; set; } 
     }
 }
+

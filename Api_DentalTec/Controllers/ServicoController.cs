@@ -1,6 +1,5 @@
 ﻿using Api_DentalTec.Dtos;
 using Api_DentalTec.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api_DentalTec.Controllers
@@ -52,6 +51,7 @@ namespace Api_DentalTec.Controllers
             servico.NomeServico = item.NomeServico;
             servico.ProfissionalEspecializado = item.ProfissionalEspecializado;
             servico.Descricao = item.Descricao;
+            servico.IdOrcamento = item.IdOrcamento;
 
             try
             {
@@ -81,6 +81,7 @@ namespace Api_DentalTec.Controllers
                 servico.NomeServico = item.NomeServico;
                 servico.ProfissionalEspecializado = item.ProfissionalEspecializado;
                 servico.Descricao = item.Descricao;
+                servico.IdOrcamento = item.IdOrcamento;
 
                 new ServicoDAO().Update(servico);
 

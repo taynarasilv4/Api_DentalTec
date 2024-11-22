@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api_DentalTec.Controllers
 {
-    [Route("caixa")]
+    [Route("Caixa")]
     [ApiController]
-    public class CaixaController : ControllerBase
+    public class CaixaController : Controller
     {
         [HttpGet]
         public IActionResult Get()
@@ -18,9 +18,10 @@ namespace Api_DentalTec.Controllers
             }
             catch (Exception)
             {
-                return Problem($"Ocorreram erros ao processar a solicitação");
+                return Problem("Ocorreram erros ao processar a solicitação.");
             }
         }
+
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -37,21 +38,26 @@ namespace Api_DentalTec.Controllers
             }
             catch (Exception)
             {
-                return Problem("Ocorreram erros ao processar a solicitação");
+                return Problem("Ocorreram erros ao processar a solicitação.");
             }
-
         }
+
         [HttpPost]
         public IActionResult Post([FromBody] CaixaDTO item)
         {
-            var caixa = new Caixa();
+            var caixa = new Caixa
+            {
 
-            caixa.Funcionario = item.Funcionario;
-            caixa.TotalEntrada = item.TotalEntrada;
-            caixa.TotalSaida = item.TotalSaida;
-            caixa.ValorTotal = item.ValorTotal;
-            caixa.ValorInicial = item.ValorInicial;
-            caixa.TipoPagamento = item.TipoPagamento;
+                Funcionario = item.Funcionario,
+                TotalEntrada = item.TotalEntrada,
+                TotalSaida = item.TotalSaida,
+                ValorTotal = item.ValorTotal,
+                ValorInicial = item.ValorInicial,
+                TipoPagamento = item.TipoPagamento
+
+
+
+            };
 
             try
             {
@@ -65,6 +71,7 @@ namespace Api_DentalTec.Controllers
 
             return Created("", caixa);
         }
+
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] CaixaDTO item)
         {
@@ -85,6 +92,8 @@ namespace Api_DentalTec.Controllers
                 caixa.ValorInicial = item.ValorInicial;
                 caixa.TipoPagamento = item.TipoPagamento;
 
+
+
                 new CaixaDAO().Update(caixa);
 
                 return Ok(caixa);
@@ -93,8 +102,8 @@ namespace Api_DentalTec.Controllers
             {
                 return Problem(e.Message);
             }
-
         }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -107,15 +116,16 @@ namespace Api_DentalTec.Controllers
                     return NotFound();
                 }
 
-                new CaixaDAO().Delete(caixa.Id);
-                return Ok(caixa);
+                // Chame o método Delete da DAO
+                new CaixaDAO().Delete(id);
+
+                return Ok();
             }
             catch (Exception e)
             {
-                return Problem(e.Message);
+                return Problem($"Erro ao excluir o caixa: {e.Message}");
             }
         }
     }
 }
-
 

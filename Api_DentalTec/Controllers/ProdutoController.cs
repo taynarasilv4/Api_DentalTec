@@ -6,48 +6,78 @@ namespace Api_DentalTec.Controllers
 {
     [Route("produtos")]
     [ApiController]
-    public class ProdutoController : Controller
+    public class ProdutoController : ControllerBase
     {
         [HttpGet]
         public IActionResult Get()
         {
             try
             {
-                List<Produto> listaProduto = new ProdutoDAO().List();
-
-                return Ok(listaProduto);
+                List<Produto> listaProdutos = new ProdutoDAO().List();
+                return Ok(listaProdutos);
             }
             catch (Exception)
             {
-                return Problem($"Ocorreram erros ao processar a solicitação");
+                return Problem("Ocorreram erros ao processar a solicitação.");
             }
         }
 
-
-            [HttpGet("{id}")] 
-            public IActionResult GetById(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            try
             {
-                try
-                {
                 var produto = new ProdutoDAO().GetById(id);
 
-                    if (produto == null) 
-                    {
-                        return NotFound();
-                    }
-
-                    return Ok(produto);
-                }
-                catch (Exception)
+                if (produto == null)
                 {
-                    return Problem("Ocorreram erros ao processar a solicitação");
+                    return NotFound();
                 }
+
+                return Ok(produto);
+            }
+            catch (Exception)
+            {
+                return Problem("Ocorreram erros ao processar a solicitação.");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] ProdutoDTO item)
+        {
+            var produto = new Produto
+            {
+                Nomeproduto = item.Nomeproduto,
+                CodigoBarra = item.CodigoBarra,
+                DataFabricacao = item.DataFabricacao,
+                DataValidade = item.DataValidade,
+                Valor = item.Valor
+            };
+
+            try
+            {
+                var dao = new ProdutoDAO();
+                produto.Id = dao.Insert(produto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            [HttpPost] 
-            public IActionResult Post([FromBody] ProdutoDTO item)
+            return Created("", produto);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] ProdutoDTO item)
+        {
+            try
             {
-                var produto = new Produto();
+                var produto = new ProdutoDAO().GetById(id);
+
+                if (produto == null)
+                {
+                    return NotFound();
+                }
 
                 produto.Nomeproduto = item.Nomeproduto;
                 produto.CodigoBarra = item.CodigoBarra;
@@ -55,68 +85,36 @@ namespace Api_DentalTec.Controllers
                 produto.DataValidade = item.DataValidade;
                 produto.Valor = item.Valor;
 
-                try
-                {
-                    var dao = new ProdutoDAO();
-                    produto.Id = dao.Insert(produto);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                new ProdutoDAO().Update(produto);
 
-                return Created("", produto);
+                return Ok(produto);
             }
-
-            [HttpPut("{id}")] 
-            public IActionResult Put(int id, [FromBody] ProdutoDTO item)
+            catch (Exception e)
             {
-                try
-                {
-                    var produto = new ProdutoDAO().GetById(id);
-                
-                    if (produto == null) 
-                    {
-                        return NotFound();
-                    }
-
-                        produto.Nomeproduto = item.Nomeproduto;
-                        produto.CodigoBarra = item.CodigoBarra;
-                        produto.DataFabricacao = item.DataFabricacao;
-                        produto.DataValidade = item.DataValidade;
-                        produto.Valor = item.Valor;
-
-                        new ProdutoDAO().Update(produto);
-
-                        return Ok(produto);
-                }
-                catch (Exception e)
-                {
-                    return Problem(e.Message);
-                }
+                return Problem(e.Message);
             }
+        }
 
-            [HttpDelete("{id}")] 
-            public IActionResult Delete(int id)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
             {
-                try
+                var produto = new ProdutoDAO().GetById(id);
+
+                if (produto == null)
                 {
-                    var produto = new ProdutoDAO().GetById(id);
-
-                    if (produto == null)
-                    {
-                       return NotFound();
-                    }
-
-                    new ProdutoDAO().Delete(produto.Id);
-
-                    return Ok(produto);
+                    return NotFound();
                 }
-                catch (Exception e)
-                {
-                    return Problem(e.Message);
-                }
+
+                new ProdutoDAO().Delete(id);
+
+                return Ok();
             }
-
+            catch (Exception e)
+            {
+                return Problem($"Erro ao excluir o produto: {e.Message}");
+            }
+        }
     }
 }

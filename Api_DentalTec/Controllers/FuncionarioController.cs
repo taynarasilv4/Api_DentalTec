@@ -1,5 +1,4 @@
-﻿using API___Funcionario__DentalTec_.Models;
-using Api_DentalTec.Dtos;
+﻿using Api_DentalTec.Dtos;
 using Api_DentalTec.Models;
 using Microsoft.AspNetCore.Mvc;
 

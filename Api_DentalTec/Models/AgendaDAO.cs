@@ -5,44 +5,51 @@ namespace Api_DentalTec.Models
 {
     public class AgendaDAO
     {
-        private static ConnectionMysql conn;
+
+        private static ConnectionMysql _conn;
 
         public AgendaDAO()
         {
-            conn = new ConnectionMysql();
+            _conn = new ConnectionMysql();
         }
 
         public int Insert(Agenda item)
         {
             try
             {
-                var query = conn.Query();
-                query.CommandText = "INSERT INTO agenda (Nome ,Profissional, Data, Hora) " +
-                                    "VALUES (@Nome, @Profissional, @Data, @Hora)";
-
-                query.Parameters.AddWithValue("@Nome", item.NomeAgenda);
-                query.Parameters.AddWithValue("@Profissional", item.ProfissionalAgenda);
-                query.Parameters.AddWithValue("@Data", item.DataAgenda);
-                query.Parameters.AddWithValue("@Hora", item.HoraAgenda);
-
-                var result = query.ExecuteNonQuery();
-
-                if (result == 0)
+                using (var query = _conn.Query())
                 {
-                    throw new Exception("O registro não foi inserido. Verifique e tente novamente.");
-                }
 
-                return (int)query.LastInsertedId;
+
+                    query.CommandText = "INSERT INTO agenda (nome_age, profissional_age, data_age, hora_age) " +
+                                        "VALUES (@nome, @profissional, @data, @hora)";
+
+                    query.Parameters.AddWithValue("@nome", item.NomeAgenda);
+                    query.Parameters.AddWithValue("@profissional", item.ProfissionalAgenda);
+                    query.Parameters.AddWithValue("@data", item.DataAgenda.ToString("yyyy-MM-dd"));
+                    query.Parameters.AddWithValue("@hora", item.HoraAgenda);
+
+                    int result = query.ExecuteNonQuery();
+
+                    if (result == 0)
+                    {
+                        throw new Exception("O registro não foi inserido. Verifique e tente novamente.");
+                    }
+
+                    return (int)query.LastInsertedId;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Erro ao inserir a agenda: " + ex.Message);
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
+
+
 
         public List<Agenda> List()
         {
@@ -50,137 +57,134 @@ namespace Api_DentalTec.Models
             {
                 List<Agenda> list = new List<Agenda>();
 
-                var query = conn.Query();
-                query.CommandText = "SELECT * FROM agenda";
-
-                MySqlDataReader reader = query.ExecuteReader();
-
-                while (reader.Read())
+                using (var query = _conn.Query())
                 {
-                    list.Add(new Agenda()
+                    query.CommandText = "SELECT * FROM agenda";
+                    using (MySqlDataReader reader = query.ExecuteReader())
                     {
-                        Id = reader.GetInt32("Id"),
-                        NomeAgenda = reader.GetString("Nome"),
-                        ProfissionalAgenda = reader.GetString("Profissional"),
-                        DataAgenda = reader.GetDateTime("Data"),
-                        HoraAgenda = reader.GetDateTime("Hora").TimeOfDay
-
-
-                    });
+                        while (reader.Read())
+                        {
+                            list.Add(new Agenda()
+                            {
+                                Id = reader.GetInt32("id_age"),
+                                NomeAgenda = reader.GetString("nome_age"),
+                                ProfissionalAgenda = reader.GetString("profissional_age"),
+                                DataAgenda = reader.GetDateTime("data_age"),
+                                HoraAgenda = reader.GetDateTime("hora_age").TimeOfDay
+                            });
+                        }
+                    }
                 }
-
                 return list;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Erro ao listar as agenda: " + ex.Message);
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
-
         public Agenda? GetById(int id)
         {
             try
             {
-                Agenda agenda = new Agenda();
+                Agenda agenda = null;
 
-                var query = conn.Query();
-                query.CommandText = "SELECT * FROM agenda WHERE Id = @_id";
-
-                query.Parameters.AddWithValue("@_id", id);
-
-                MySqlDataReader reader = query.ExecuteReader();
-
-                if (!reader.HasRows)
+                using (var query = _conn.Query())
                 {
-                    return null;
-                }
+                    query.CommandText = "SELECT * FROM agenda WHERE id_age = @_id";
+                    query.Parameters.AddWithValue("@_id", id);
 
-                while (reader.Read())
-                {
-                    agenda.Id = reader.GetInt32("Id");
-                    agenda.NomeAgenda = reader.GetString("Nome");
-                    agenda.ProfissionalAgenda = reader.GetString("Profissional");
-                    agenda.DataAgenda = reader.GetDateTime("Data");
-                    agenda.HoraAgenda = reader.GetDateTime("Hora").TimeOfDay;
-
+                    using (MySqlDataReader reader = query.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            agenda = new Agenda()
+                            {
+                                Id = reader.GetInt32("id_age"),
+                                NomeAgenda = reader.GetString("nome_age"),
+                                ProfissionalAgenda = reader.GetString("profissional_age"),
+                                DataAgenda = reader.GetDateTime("data_age"),
+                                HoraAgenda = reader.GetDateTime("hora_age").TimeOfDay
+                            };
+                        }
+                    }
                 }
 
                 return agenda;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Erro ao buscar a agenda: " + ex.Message);
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
+
 
         public void Update(Agenda item)
         {
             try
             {
-                var query = conn.Query();
-                query.CommandText = "UPDATE agenda SET Nome = @_Nome, Profissional = @_Profissional, Data= @_Data, Hora = @_Hora WHERE Id = @_id";
-
-                query.Parameters.AddWithValue("@_Nome", item.NomeAgenda);
-                query.Parameters.AddWithValue("@_Profissional", item.ProfissionalAgenda);
-                query.Parameters.AddWithValue("@_Data", item.DataAgenda);
-
-                query.Parameters.AddWithValue("@_Hora", item.HoraAgenda);
-
-                query.Parameters.AddWithValue("@_id", item.Id);
-
-                var result = query.ExecuteNonQuery();
-
-                if (result == 0)
+                using (var query = _conn.Query())
                 {
-                    throw new Exception("O registro não foi atualizado. Verifique e tente novamente.");
+                    query.CommandText = "UPDATE agenda SET nome = @_nome, profissional = @_profissional, data = @_data, hora = @_hora WHERE id = @_id";
+
+
+                    query.Parameters.AddWithValue("@_nome", item.NomeAgenda);
+                    query.Parameters.AddWithValue("@_profissional", item.ProfissionalAgenda);
+                    query.Parameters.AddWithValue("@_data", item.DataAgenda.ToString("yyyy-MM-dd"));
+                    query.Parameters.AddWithValue("@_hora", item.HoraAgenda.ToString("yyyy-MM-dd"));
+                    query.Parameters.AddWithValue("@_id", item.Id);
+
+                    int rowsAffected = query.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new Exception("A agenda não foi atualizado.");
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Erro ao atualizar a agenda: " + ex.Message);
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
-
-        //excluir agenda pelo id
         public void Delete(int id)
         {
             try
             {
-                var query = conn.Query();
-                query.CommandText = "DELETE FROM paciente WHERE Id = @_id";
-
-                query.Parameters.AddWithValue("@_id", id);
-
-                var result = query.ExecuteNonQuery();
-
-                if (result == 0)
+                using (var query = _conn.Query())
                 {
-                    throw new Exception("O registro não foi excluído. Verifique e tente novamente.");
+                    query.CommandText = "DELETE FROM agenda WHERE id_age = @_id";
+                    query.Parameters.AddWithValue("@_id", id);
+
+                    int rowsAffected = query.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new Exception("A agenda não foi removido.");
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Erro ao remover a agenda: " + ex.Message);
             }
             finally
             {
-                conn.Close();
+                _conn.Close();
             }
         }
     }
 }
-
-
 

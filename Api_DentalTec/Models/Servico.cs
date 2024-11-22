@@ -6,6 +6,8 @@
         public string NomeServico { get; set; }
         public string ProfissionalEspecializado { get; set; }
         public string Descricao { get; set; }
+        public int IdOrcamento { get; set; } 
 
     }
 }
+

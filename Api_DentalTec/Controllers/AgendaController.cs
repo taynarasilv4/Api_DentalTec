@@ -4,103 +4,125 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api_DentalTec.Controllers
 {
-
     [Route("agendas")]
     [ApiController]
-
-    public class AgendaController : Controller
+    public class AgendaController : ControllerBase
     {
-        List<Agenda> listaAgenda = new List<Agenda>();
 
-        public AgendaController()
-        {
-            var agenda1 = new Agenda()
-            {
-                Id = 1,
-                NomeAgenda = "Natalia Pereira",
-                ProfissionalAgenda = "Larissa Emanuela",
-                DataAgenda = new DateTime(2024, 9, 17),
-                HoraAgenda = new TimeSpan(13, 00, 00)
-
-            };
-
-            listaAgenda.Add(agenda1);
-        }
-
-        [HttpGet] //listagem
+        [HttpGet]
         public IActionResult Get()
         {
-            return Ok(listaAgenda);
+            try
+            {
+                List<Agenda> listaAgendas = new AgendaDAO().List();
+                return Ok(listaAgendas);
+            }
+            catch (Exception)
+            {
+                return Problem("Ocorreram erros ao processar a solicitação.");
+            }
         }
-
-        [HttpGet("{id}")] //listagem = busca pelo id
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var agenda = listaAgenda.Where(item => item.Id == id).FirstOrDefault(); /*fazendo busca na agenda*/
-
-            if (agenda == null) /*verifica se existe*/
+            try
             {
-                return NotFound();
-            }
+                var agenda = new AgendaDAO().GetById(id);
 
-            return Ok(agenda);
+                if (agenda == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(agenda);
+            }
+            catch (Exception)
+            {
+                return Problem("Ocorreram erros ao processar a solicitação.");
+            }
         }
 
-        [HttpPost] //criar um registro
+        [HttpPost]
         public IActionResult Post([FromBody] AgendaDTO item)
         {
+            var agenda = new Agenda
+            {
+                NomeAgenda = item.NomeAgenda,
+                ProfissionalAgenda = item.ProfissionalAgenda,
+                DataAgenda = item.DataAgenda,
+                HoraAgenda = item.HoraAgenda
+            };
 
-            var contador = listaAgenda.Count();
-            var agenda = new Agenda();
+            try
+            {
+                var dao = new AgendaDAO();
+                agenda.Id = dao.Insert(agenda);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            agenda.Id = contador + 1;
-            agenda.NomeAgenda = item.NomeAgenda;
-            agenda.ProfissionalAgenda = item.ProfissionalAgenda;
-            agenda.DataAgenda = item.DataAgenda;
-            agenda.HoraAgenda = item.HoraAgenda;
-
-            listaAgenda.Add(agenda);
-
-            return StatusCode(StatusCodes.Status201Created, agenda);
+            return Created("", agenda);
         }
 
-        [HttpPut("{id}")] 
+        [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] AgendaDTO item)
         {
-            var agenda = listaAgenda.Where(item => item.Id == id).FirstOrDefault();/*fazendo busca*/
-
-            if (agenda == null) /*verifica se existe*/
+            try
             {
-                return NotFound();
+                var agenda = new AgendaDAO().GetById(id);
+
+                if (agenda == null)
+                {
+                    return NotFound();
+                }
+
+                agenda.NomeAgenda = item.NomeAgenda;
+                agenda.ProfissionalAgenda = item.ProfissionalAgenda;
+                agenda.DataAgenda = item.DataAgenda;
+                agenda.HoraAgenda = item.HoraAgenda;
+
+                new AgendaDAO().Update(agenda);
+
+                return Ok(agenda);
             }
-
-            agenda.NomeAgenda = item.NomeAgenda;
-            agenda.ProfissionalAgenda = item.ProfissionalAgenda;
-            agenda.DataAgenda = item.DataAgenda;
-            agenda.HoraAgenda = item.HoraAgenda;
-
-
-            return Ok(agenda);
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
         }
 
-        [HttpDelete("{id}")] //excluir um registro
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var agenda = listaAgenda.Where(item => item.Id == id).FirstOrDefault();
-
-            if (agenda == null) /*verifica se existe*/
+            try
             {
-                return NotFound();
+                var agenda = new AgendaDAO().GetById(id);
+
+                if (agenda == null)
+                {
+                    return NotFound();
+                }
+
+                // Chame o método Delete da DAO
+                new AgendaDAO().Delete(id);
+
+                return Ok();
             }
-
-            listaAgenda.Remove(agenda);
-
-            /*return NoContent(); /*status code 204 e você não retorna nenhuma informação*/
-            return Ok(agenda);
+            catch (Exception e)
+            {
+                return Problem($"Erro ao excluir a Agenda: {e.Message}");
+            }
         }
+
 
     }
 
 
 }
+
+
+
+
 
